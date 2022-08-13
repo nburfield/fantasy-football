@@ -24,8 +24,25 @@ The ADP data is pulled by the script for every run. The source data is provided 
 
 The player rankings must be downloaded manually. Go to the page and select rankings at the top.
 Go to each position, input the valid parameters for scoring format, and export as CSV.
-**Save the CSV files in a folder local to project named `ffrd/<scoring-format>` (Ex. `ffrd/half-ppr`)**
 - https://www.thefantasyfootballers.com/
+
+**Save the CSV files in a folder local to project named with shorthand position `ffrd/<scoring-format>/<position>.csv` (Ex. `ffrd/half-ppr/qb.csv`)**
+- All File Options
+    - Half PPR
+        - `ffrd/half-ppr/qb.csv`
+        - `ffrd/half-ppr/rb.csv`
+        - `ffrd/half-ppr/te.csv`
+        - `ffrd/half-ppr/wr.csv`
+    - Full PPR
+        - `ffrd/ppr/qb.csv`
+        - `ffrd/ppr/rb.csv`
+        - `ffrd/ppr/te.csv`
+        - `ffrd/ppr/wr.csv`
+    - Standard
+        - `ffrd/standard/qb.csv`
+        - `ffrd/standard/rb.csv`
+        - `ffrd/standard/te.csv`
+        - `ffrd/standard/wr.csv`
 
 
 # Running Script
