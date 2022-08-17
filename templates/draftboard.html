@@ -58,6 +58,14 @@
         margin: 0;
         padding: 0;
     }
+
+    .even-row {
+        background-color: inherit;
+    }
+
+    .odd-row {
+        background-color: #F0F0F0;
+    }
   </style>
 </head>
 <body>
@@ -77,7 +85,12 @@
         <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["rb"] %}
-      <tr>
+      {% set adp_int = player["adp_formatted"] | int %}
+      {% if adp_int%2 == 0 %}
+      <tr class="even-row">
+      {% else %}
+      <tr class="odd-row">
+      {% endif %}
         <td class="name-td">{{ player["name"] }}</td>
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
@@ -98,7 +111,12 @@
         <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["wr"] %}
-      <tr>
+      {% set adp_int = player["adp_formatted"] | int %}
+      {% if adp_int%2 == 0 %}
+      <tr class="even-row">
+      {% else %}
+      <tr class="odd-row">
+      {% endif %}
         <td class="name-td">{{ player["name"] }}</td>
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
@@ -119,7 +137,12 @@
         <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["qb"] %}
-      <tr>
+      {% set adp_int = player["adp_formatted"] | int %}
+      {% if adp_int%2 == 0 %}
+      <tr class="even-row">
+      {% else %}
+      <tr class="odd-row">
+      {% endif %}
         <td class="name-td">{{ player["name"] }}</td>
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
@@ -140,7 +163,12 @@
         <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["te"] %}
-      <tr>
+      {% set adp_int = player["adp_formatted"] | int %}
+      {% if adp_int%2 == 0 %}
+      <tr class="even-row">
+      {% else %}
+      <tr class="odd-row">
+      {% endif %}
         <td class="name-td">{{ player["name"] }}</td>
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
