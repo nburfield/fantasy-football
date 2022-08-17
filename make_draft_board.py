@@ -133,7 +133,7 @@ def add_player_rankings(datamap, adp_data):
 
                 # Log and skip on error
                 if not key in adp_data:
-                    logging.error("ADP Data for Player %s Not Found", player["Name"])
+                    # logging.error("ADP Data for Player %s Not Found", player["Name"])
                     continue
 
                 # Set the Rankings in ADP
@@ -178,6 +178,78 @@ def organize_db_data(adp_data):
     return db_data
 
 
+def get_sportsdataio_data(datamap, adp_data, clear_cache):
+    """
+    get_sportsdataio_data Calls the API of SportsData.io to get player information.
+    Maps the depth chart information to the adp_data.
+
+    :param datamap: The values to build the dataset
+    :param adp_data: A Dict of the current ADP data w/ Key being the player names
+    :param clear_cache: Boolean to clear the cache data
+    """
+
+    # File where the data is saved to
+    sd_export_json = "./files/sports_data_io.json"
+    sdio_json = {}
+
+    if os.path.isfile(sd_export_json):
+        if clear_cache is False:
+            logging.error("======= LOADING SPORTSDATA.IO FROM CACHE (clear with flag -csd) =======")
+
+            # Load the data from file
+            with open(sd_export_json, "r", encoding="utf-8") as sd_f:
+                sdio_json = json.load(sd_f)
+
+    # If the data was not set from cache try to Call API
+    if len(sdio_json) < 1:
+        # Check if key is defined
+        if datamap["sports_data_api_key"] is None:
+            logging.error("SportsData.IO Key is not defined")
+            return
+
+        # Build the request URL
+        try:
+            sportsdataio_base_url = datamap["sportsdataio_base_url"]
+            sports_data_api_key = datamap["sports_data_api_key"]
+        except Exception as ex: # pylint: disable=broad-except
+            logging.error("datamap Dict must have all Keys: %s", str(ex))
+
+        # Build and call ADP URL
+        url = f"{sportsdataio_base_url}/v3/nfl/scores/json/Players"
+        logging.info("Calling ADP URL %s", url)
+        sdio_r = requests.get(url, headers={"Ocp-Apim-Subscription-Key": sports_data_api_key})
+
+        # Check for successful API call
+        if sdio_r.ok:
+            sdio_json = sdio_r.json()
+
+            # Save out the data to file
+            with open(sd_export_json, "w", encoding="utf-8") as sd_f:
+                sd_f.write(json.dumps(sdio_json, indent=4))
+        else:
+            logging.error("Bad API call: %s", sdio_r.text)
+            raise Exception("Bad SportData.IO API Call")
+
+    # Check if data exists. Map values if so.
+    if len(sdio_json) > 0:
+        # Loop the values and set the information per player
+        for player in sdio_json:
+            # Make the Dict key from player name
+            key = player["Name"].replace(' ', '_').replace('.', '').lower()
+
+            # Check for a key mapping with this player
+            if player["Name"] in PLAYER_NAME_MAP:
+                key = PLAYER_NAME_MAP[player["Name"]]
+
+            # Check for the existing player
+            if key in adp_data:
+                # Set values
+                adp_data[key]["depth_order"] = player["DepthOrder"]
+                adp_data[key]["depth_display_order"] = player["DepthDisplayOrder"]
+    else:
+        logging.error("No SportsData.IO Data loaded")
+
+
 def generate_html_v1(datamap, draft_board_data):
     """
     generate_html_v1 Version 1 of the HTML draftboard file
@@ -209,6 +281,8 @@ def main():
     parser.add_argument('-pc', '--player_count', help="the fantasy players of ADP data",
                         choices=TEAMS, required=True, metavar="<player_count>")
     parser.add_argument('-cc', '--clear_cache', help="clears the cached data", action='store_true')
+    parser.add_argument('-csd', '--clear_sd', help="clears the cached of SportsData.IO",
+                        action='store_true')
 
     args = parser.parse_args()
 
@@ -217,7 +291,11 @@ def main():
         "adp_base_url": "https://fantasyfootballcalculator.com/api/v1/adp",
         "scoring_format": args.scoring_format,
         "player_count": args.player_count,
-        "year": datetime.now().year
+        "year": datetime.now().year,
+
+        # Check for the SportsData API key. Set as ENV SPORTSDATA_KEY.
+        "sportsdataio_base_url": "https://api.sportsdata.io",
+        "sports_data_api_key": os.environ.get('SPORTSDATA_KEY')
     }
 
     run_info = f"{datamap['scoring_format']}_{datamap['player_count']}_{datamap['year']}"
@@ -235,6 +313,9 @@ def main():
 
         # Merge in Player Rankings
         add_player_rankings(datamap, adp_data)
+
+        # Add in the Depth Cart information
+        get_sportsdataio_data(datamap, adp_data, args.clear_sd)
 
         # Save out the data to file
         with open(export_json, "w", encoding="utf-8") as db_f:

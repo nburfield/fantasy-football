@@ -11,6 +11,10 @@
 
 2. **optional** Collect the additional player rankings
 
+3. Export SportsData.IO API Key
+    ```bash
+    export SPORTSDATA_KEY="<key>"
+    ```
 
 # Data Source
 

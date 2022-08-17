@@ -38,7 +38,15 @@
       text-align: center;
     }
 
+    .depth-td {
+      text-align: center;
+    }
+
     .rank-segment {
+      padding: 0px 5px;
+    }
+
+    .depth-segment {
       padding: 0px 5px;
     }
 
@@ -57,6 +65,7 @@
 
 <p class="header-title">{{datamap["year"]}} - {{datamap["scoring_format"]}} - {{datamap["player_count"]}} players</p>
 
+
 <div class="row">
   <div class="column">
     <table>
@@ -65,6 +74,7 @@
         <td class="team-td">Team</td>
         <td class="adp-td">ADP</td>
         <td class="rank-td">Rank-Andy-Mike-Jason</td>
+        <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["rb"] %}
       <tr>
@@ -72,6 +82,7 @@
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
         <td class="rank-td"><span class="rank-segment">{{ player["rank"] }}</span>-<span class="rank-segment">{{ player["andy"] }}</span>-<span class="rank-segment">{{ player["mike"] }}</span>-<span class="rank-segment">{{ player["jason"] }}</span></td>
+        <td class="depth-td"><span class="depth-segment">{{ "" if player["depth_order"] is none else player["depth_order"] }}</span>-<span class="depth-segment">{{ "" if player["depth_display_order"] is none else player["depth_display_order"] }}</span></td>
       </tr>
       {% endfor %}
     </table>
@@ -84,6 +95,7 @@
         <td class="team-td">Team</td>
         <td class="adp-td">ADP</td>
         <td class="rank-td">Rank-Andy-Mike-Jason</td>
+        <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["wr"] %}
       <tr>
@@ -91,6 +103,7 @@
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
         <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+        <td class="depth-td"><span class="depth-segment">{{ "" if player["depth_order"] is none else player["depth_order"] }}</span>-<span class="depth-segment">{{ "" if player["depth_display_order"] is none else player["depth_display_order"] }}</span></td>
       </tr>
       {% endfor %}
     </table>
@@ -103,6 +116,7 @@
         <td class="team-td">Team</td>
         <td class="adp-td">ADP</td>
         <td class="rank-td">Rank-Andy-Mike-Jason</td>
+        <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["qb"] %}
       <tr>
@@ -110,6 +124,7 @@
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
         <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+        <td class="depth-td"><span class="depth-segment">{{ "" if player["depth_order"] is none else player["depth_order"] }}</span>-<span class="depth-segment">{{ "" if player["depth_display_order"] is none else player["depth_display_order"] }}</span></td>
       </tr>
       {% endfor %}
     </table>
@@ -122,6 +137,7 @@
         <td class="team-td">Team</td>
         <td class="adp-td">ADP</td>
         <td class="rank-td">Rank-Andy-Mike-Jason</td>
+        <td class="depth-td">DO-DDO</td>
       </thead>
       {% for player in draft_board_data["te"] %}
       <tr>
@@ -129,6 +145,7 @@
         <td class="team-td">{{ player["team"] }}</td>
         <td class="adp-td">{{ player["adp_formatted"] }}</td>
         <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+        <td class="depth-td"><span class="depth-segment">{{ "" if player["depth_order"] is none else player["depth_order"] }}</span>-<span class="depth-segment">{{ "" if player["depth_display_order"] is none else player["depth_display_order"] }}</span></td>
       </tr>
       {% endfor %}
     </table>
