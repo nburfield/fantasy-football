@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FF Draft Board</title>
+
+  <style type="text/css">
+      * {
+        box-sizing: border-box;
+      }
+
+      .row {
+        margin-left:-5px;
+        margin-right:-5px;
+      }
+
+      .column {
+        float: left;
+        width: 25%;
+        padding: 5px;
+      }
+
+    .name-td {
+
+    }
+
+    .team-td {
+
+    }
+
+    .adp-td {
+      width: 40px;
+      text-align: right;
+    }
+
+    .rank-td {
+      text-align: center;
+    }
+
+    .rank-segment {
+      padding: 0px 5px;
+    }
+
+    td {
+        font-size: 8px;
+    }
+
+    .header-title {
+        margin: 0;
+        padding: 0;
+    }
+  </style>
+</head>
+<body>
+
+
+<p class="header-title">{{datamap["year"]}} - {{datamap["scoring_format"]}} - {{datamap["player_count"]}} players</p>
+
+<div class="row">
+  <div class="column">
+    <table>
+      <thead>
+        <td class="name-td">RB</td>
+        <td class="team-td">Team</td>
+        <td class="adp-td">ADP</td>
+        <td class="rank-td">Rank-Andy-Mike-Jason</td>
+      </thead>
+      {% for player in draft_board_data["rb"] %}
+      <tr>
+        <td class="name-td">{{ player["name"] }}</td>
+        <td class="team-td">{{ player["team"] }}</td>
+        <td class="adp-td">{{ player["adp_formatted"] }}</td>
+        <td class="rank-td"><span class="rank-segment">{{ player["rank"] }}</span>-<span class="rank-segment">{{ player["andy"] }}</span>-<span class="rank-segment">{{ player["mike"] }}</span>-<span class="rank-segment">{{ player["jason"] }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="column">
+    <table>
+      <thead>
+        <td class="name-td">WR</td>
+        <td class="team-td">Team</td>
+        <td class="adp-td">ADP</td>
+        <td class="rank-td">Rank-Andy-Mike-Jason</td>
+      </thead>
+      {% for player in draft_board_data["wr"] %}
+      <tr>
+        <td class="name-td">{{ player["name"] }}</td>
+        <td class="team-td">{{ player["team"] }}</td>
+        <td class="adp-td">{{ player["adp_formatted"] }}</td>
+        <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="column">
+    <table>
+      <thead>
+        <td class="name-td">QB</td>
+        <td class="team-td">Team</td>
+        <td class="adp-td">ADP</td>
+        <td class="rank-td">Rank-Andy-Mike-Jason</td>
+      </thead>
+      {% for player in draft_board_data["qb"] %}
+      <tr>
+        <td class="name-td">{{ player["name"] }}</td>
+        <td class="team-td">{{ player["team"] }}</td>
+        <td class="adp-td">{{ player["adp_formatted"] }}</td>
+        <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="column">
+    <table>
+      <thead>
+        <td class="name-td">TE</td>
+        <td class="team-td">Team</td>
+        <td class="adp-td">ADP</td>
+        <td class="rank-td">Rank-Andy-Mike-Jason</td>
+      </thead>
+      {% for player in draft_board_data["te"] %}
+      <tr>
+        <td class="name-td">{{ player["name"] }}</td>
+        <td class="team-td">{{ player["team"] }}</td>
+        <td class="adp-td">{{ player["adp_formatted"] }}</td>
+        <td class="rank-td">{{ player["rank"] }}-{{ player["andy"] }}-{{ player["mike"] }}-{{ player["jason"] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
