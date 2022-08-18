@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            h4 {
+                padding: 0px;
+                margin: 0px;
+            }
+
+            .main_container {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                align-items: flex-start;
+                align-content: space-between;
+                gap: 0.5in 0.5in;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .table th,
+            .table td {
+                white-space: nowrap;
+            }
+
+            .table th {
+                font-size: 8pt;
+            }
+
+            .table td {
+                font-size: 5pt;
+                border-top: thin solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <body>
+            <div class="main_container">
+                {% for positionName in player_data %}
+                    <div class="position_container">
+                        <h4>
+                            {{ positionName }}
+                        </h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Team
+                                    </th>
+                                    <th>
+                                        Rank
+                                    </th>
+                                    <th>
+                                        ADP
+                                    </th>
+                                    <th>
+                                        Rnd/P
+                                    </th>
+                                    <th>
+                                        A/M/J
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for playerInfo in player_data[positionName] %} 
+                                    <tr>
+                                        <td>
+                                            {{ playerInfo.name }}
+                                        </td>
+                                        <td>
+                                            {{ playerInfo.team }} [{{ playerInfo.bye }}]
+                                        </td>
+                                        <td>
+                                            {{ playerInfo.rank }}
+                                        </td>
+                                        <td>
+                                            {{ playerInfo.adp }}
+                                        </td>
+                                        <td>
+                                            {{ playerInfo.adp_formatted }}
+                                        </td>
+                                        <td>
+                                            {{ playerInfo.andy }} / {{ playerInfo.mike }} / {{ playerInfo.jason }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+            </div>
+        </body>
+    </body>
+</html>

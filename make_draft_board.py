@@ -11,6 +11,7 @@ import csv
 import json
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
+from weasyprint import HTML
 import requests
 
 
@@ -266,6 +267,23 @@ def generate_html_v1(datamap, draft_board_data):
         message.write(content)
 
 
+def generate_pdf_v1(datamap, draft_board_data):
+    # player_data_grouped = {}
+    # for player in adp_data:
+    #     if adp_data[player]["position"] not in player_data_grouped:
+    #         player_data_grouped[adp_data[player]["position"]] = []
+    #     player_data_grouped[adp_data[player]["position"]].append(adp_data[player])
+    
+    # Setup the jinja2 Environment
+    env = Environment(loader=FileSystemLoader("./templates/"))
+    template = env.get_template("draft_board.html")
+
+    content = template.render(player_data=draft_board_data)
+    file_name = "./files/"
+    file_name += f"db_{datamap['year']}_{datamap['scoring_format']}_{datamap['player_count']}.pdf"
+    HTML(string=content).write_pdf(file_name)
+
+
 def main():
     """
     main The Main function of the script
@@ -326,6 +344,7 @@ def main():
 
     # Generate the HTML output
     generate_html_v1(datamap, draft_board_data)
+    generate_pdf_v1(datamap, draft_board_data)
 
 
 if __name__ == "__main__":
