@@ -50,6 +50,15 @@ PLAYER_NAME_MAP = {"Travis Etienne Jr.": "travis_etienne",
                    "Robert Tonyan": "robert_tonyan"
                   }
 
+MY_GUYS = {"allen_robinson",
+           "aj_dillon",
+           "mike_williams",
+           "jalen_hurts",
+           "chase_edmonds",
+           "gabe_davis",
+           "courtland_sutton",
+           "allen_lazard",
+           "michael_pittman_jr"}
 
 def get_adp_data(datamap):
     """
@@ -136,6 +145,9 @@ def add_player_rankings(datamap, adp_data):
                 if not key in adp_data:
                     # logging.error("ADP Data for Player %s Not Found", player["Name"])
                     continue
+
+                # Set the My Guys boolean
+                adp_data[key]["my_guy"] = True if key in MY_GUYS else False
 
                 # Set the Rankings in ADP
                 try:
@@ -261,8 +273,9 @@ def generate_html_v1(datamap, draft_board_data):
     template = environment.get_template("draftboard.html")
 
     content = template.render(datamap=datamap, draft_board_data=draft_board_data)
+    file_key = f"{datamap['year']}_{datamap['scoring_format']}_{datamap['player_count']}"
     file_name = "./files/"
-    file_name += f"db_{datamap['year']}_{datamap['scoring_format']}_{datamap['player_count']}.html"
+    file_name += f"db_v1_{file_key}.html"
     with open(file_name, mode="w", encoding="utf-8") as message:
         message.write(content)
 
@@ -273,15 +286,20 @@ def generate_pdf_v1(datamap, draft_board_data):
     #     if adp_data[player]["position"] not in player_data_grouped:
     #         player_data_grouped[adp_data[player]["position"]] = []
     #     player_data_grouped[adp_data[player]["position"]].append(adp_data[player])
-    
+
     # Setup the jinja2 Environment
     env = Environment(loader=FileSystemLoader("./templates/"))
     template = env.get_template("draft_board.html")
 
     content = template.render(player_data=draft_board_data)
+    file_key = f"{datamap['year']}_{datamap['scoring_format']}_{datamap['player_count']}"
     file_name = "./files/"
-    file_name += f"db_{datamap['year']}_{datamap['scoring_format']}_{datamap['player_count']}.pdf"
-    HTML(string=content).write_pdf(file_name)
+    file_name += f"db_v2_{file_key}.pdf"
+
+    # HTML(string=content).write_pdf(file_name)
+
+    with open(f"{file_name}.html", mode="w", encoding="utf-8") as message:
+        message.write(content)
 
 
 def main():

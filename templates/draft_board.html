@@ -69,10 +69,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for playerInfo in player_data[positionName] %} 
+                                {% for playerInfo in player_data[positionName] %}
                                     <tr>
                                         <td>
-                                            {{ playerInfo.name }}
+                                            {{ playerInfo.name }}{% if playerInfo.my_guy %}*{% endif %}
                                         </td>
                                         <td>
                                             {{ playerInfo.team }} [{{ playerInfo.bye }}]
