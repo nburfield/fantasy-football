@@ -296,7 +296,7 @@ def generate_pdf_v1(datamap, draft_board_data):
     file_name = "./files/"
     file_name += f"db_v2_{file_key}.pdf"
 
-    # HTML(string=content).write_pdf(file_name)
+    HTML(string=content).write_pdf(file_name)
 
     with open(f"{file_name}.html", mode="w", encoding="utf-8") as message:
         message.write(content)
