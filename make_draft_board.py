@@ -60,6 +60,26 @@ MY_GUYS = {"allen_robinson",
            "allen_lazard",
            "michael_pittman_jr"}
 
+SKIP_PLAYERS = {"blaine_gabbert",
+                "calvin_ridley"}
+
+def get_player_key(name):
+    """
+    get_player_key Generates the dictionary key for the player with their full name.
+
+    :param name: The players name to create key from
+    :return The key to use in the dictionary
+    """
+
+    key = name.replace(' ', '_').replace('.', '').replace("'", '').lower()
+
+    # Check for a key mapping with this player
+    if name in PLAYER_NAME_MAP:
+        key = PLAYER_NAME_MAP[name]
+
+    return key
+
+
 def get_adp_data(datamap):
     """
     get_adp_data Makes a call to the ADP data source and build Dict of ADP data
@@ -89,15 +109,14 @@ def get_adp_data(datamap):
         if adp_r_json.get("status", "bad") == "Success":
             for player in adp_r_json["players"]:
                 # Make the Dict key from player name
-                key = player["name"].replace(' ', '_').replace('.', '').lower()
-
-                # Check for a key mapping with this player
-                if player["name"] in PLAYER_NAME_MAP:
-                    key = PLAYER_NAME_MAP[player["name"]]
+                key = get_player_key(player["name"])
 
                 # Log when duplicate players are found
                 if key in adp_data:
                     logging.error("%s has duplicate hits.", player["name"])
+
+                if key in SKIP_PLAYERS:
+                    continue
 
                 # Set the player key/value
                 adp_data[key] = player
@@ -134,17 +153,18 @@ def add_player_rankings(datamap, adp_data):
         with open(file_path, "r", encoding="utf-8") as pr_f:
             player_list = csv.DictReader(pr_f)
             for player in player_list:
-                # Get the Data key and verify it exists
-                key = player["Name"].replace(' ', '_').replace('.', '').lower()
+                # Make the Dict key from player name
+                key = get_player_key(player["Name"])
 
-                # Check for a key mapping with this player
-                if player["Name"] in PLAYER_NAME_MAP:
-                    key = PLAYER_NAME_MAP[player["Name"]]
-
-                # Log and skip on error
+                # If player has no ADP put them in to add the Rankings
                 if not key in adp_data:
-                    # logging.error("ADP Data for Player %s Not Found", player["Name"])
-                    continue
+                    adp_data[key] = {
+                        "name": player["Name"],
+                        "position": position.replace(".csv", "").upper(),
+                        "team": player["Team"],
+                        "adp": 1000.0 + int(player["Rank"]),
+                        "adp_formatted": "19.0"
+                    }
 
                 # Set the My Guys boolean
                 adp_data[key]["my_guy"] = True if key in MY_GUYS else False
@@ -248,17 +268,15 @@ def get_sportsdataio_data(datamap, adp_data, clear_cache):
         # Loop the values and set the information per player
         for player in sdio_json:
             # Make the Dict key from player name
-            key = player["Name"].replace(' ', '_').replace('.', '').lower()
-
-            # Check for a key mapping with this player
-            if player["Name"] in PLAYER_NAME_MAP:
-                key = PLAYER_NAME_MAP[player["Name"]]
+            key = get_player_key(player["Name"])
 
             # Check for the existing player
             if key in adp_data:
-                # Set values
-                adp_data[key]["depth_order"] = player["DepthOrder"]
-                adp_data[key]["depth_display_order"] = player["DepthDisplayOrder"]
+                # Validate the position is a correct match
+                if adp_data[key]["position"].lower() == player["Position"].lower():
+                    # Set values
+                    adp_data[key]["depth_order"] = player["DepthOrder"]
+                    adp_data[key]["depth_display_order"] = player["DepthDisplayOrder"]
     else:
         logging.error("No SportsData.IO Data loaded")
 
