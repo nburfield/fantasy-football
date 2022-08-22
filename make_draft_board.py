@@ -107,6 +107,7 @@ def get_adp_data(datamap):
     if adp_r.ok:
         adp_r_json = adp_r.json()
         if adp_r_json.get("status", "bad") == "Success":
+            overall_ranking = 0
             for player in adp_r_json["players"]:
                 # Make the Dict key from player name
                 key = get_player_key(player["name"])
@@ -117,6 +118,10 @@ def get_adp_data(datamap):
 
                 if key in SKIP_PLAYERS:
                     continue
+
+                # The data is returned sorted by overall player ranking.
+                overall_ranking += 1
+                player["overall_rank"] = overall_ranking
 
                 # Set the player key/value
                 adp_data[key] = player
